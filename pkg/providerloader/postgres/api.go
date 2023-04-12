@@ -59,6 +59,8 @@ func NewAPI(conf options.API, rs *RedisStore, proxyPrefix string) error {
 
 }
 
+// This function handles the api for creating a new config entry after validating
+// inputs.
 func (api *API) CreateHandler(rw http.ResponseWriter, req *http.Request) {
 	id, providerConf, err := api.validateProviderConfig(req)
 	if err != nil {
@@ -66,6 +68,7 @@ func (api *API) CreateHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// calling create of config store after validation
 	err = api.configStore.Create(req.Context(), id, providerConf)
 	if err != nil {
 		if errors.Is(err, ErrAlreadyExists) {
@@ -115,12 +118,13 @@ func (api *API) DeleteHandler(rw http.ResponseWriter, req *http.Request) {
 	rw.WriteHeader(http.StatusNoContent)
 }
 
+// This function updates config in the primary config store which updates cache
+// as well, for update validation of inputs is also done to avoid failures.
 func (api *API) UpdateHandler(rw http.ResponseWriter, req *http.Request) {
 	id, data, err := api.validateProviderConfig(req)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusBadRequest, err.Error())
 		return
-
 	}
 
 	err = api.configStore.Update(req.Context(), id, data)
@@ -133,6 +137,7 @@ func (api *API) UpdateHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// return status accepted if no error is returned
 	rw.WriteHeader(http.StatusAccepted)
 
 }

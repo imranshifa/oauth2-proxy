@@ -115,7 +115,7 @@ type WriterFuncs struct {
 
 // WriteSignInPage implements the Writer interface.
 // If the SignInPageFunc is provided, this will be used, else a default
-// implementation will be used.
+// implementation will be used. This function is an implementation of the interface.
 func (w *WriterFuncs) WriteSignInPage(rw http.ResponseWriter, req *http.Request, provider providers.Provider, t *SignInTemplate) {
 	if w.SignInPageFunc != nil {
 		w.SignInPageFunc(rw, req, provider, t)
@@ -129,7 +129,7 @@ func (w *WriterFuncs) WriteSignInPage(rw http.ResponseWriter, req *http.Request,
 
 // WriteErrorPage implements the Writer interface.
 // If the ErrorPageFunc is provided, this will be used, else a default
-// implementation will be used.
+// implementation will be used. The error page writer has opts as well.
 func (w *WriterFuncs) WriteErrorPage(ctx context.Context, rw http.ResponseWriter, opts ErrorPageOpts) {
 	if w.ErrorPageFunc != nil {
 		w.ErrorPageFunc(ctx, rw, opts)
@@ -145,7 +145,7 @@ func (w *WriterFuncs) WriteErrorPage(ctx context.Context, rw http.ResponseWriter
 
 // ProxyErrorHandler implements the Writer interface.
 // If the ProxyErrorFunc is provided, this will be used, else a default
-// implementation will be used.
+// implementation will be used. proxy error is also returned
 func (w *WriterFuncs) ProxyErrorHandler(rw http.ResponseWriter, req *http.Request, proxyErr error) {
 	if w.ProxyErrorFunc != nil {
 		w.ProxyErrorFunc(rw, req, proxyErr)
