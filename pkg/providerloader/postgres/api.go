@@ -68,7 +68,9 @@ func (api *API) CreateHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// calling create of config store after validation
+	// calling create of config store after validation, which will ensure that
+	// no invalid inputs are transferred to avoid errors and
+	// failures.
 	err = api.configStore.Create(req.Context(), id, providerConf)
 	if err != nil {
 		if errors.Is(err, ErrAlreadyExists) {
@@ -120,6 +122,8 @@ func (api *API) DeleteHandler(rw http.ResponseWriter, req *http.Request) {
 
 // This function updates config in the primary config store which updates cache
 // as well, for update validation of inputs is also done to avoid failures.
+// It is an http handler function defined for update api calls and it ensures
+// to return proper response in case of failure as well.
 func (api *API) UpdateHandler(rw http.ResponseWriter, req *http.Request) {
 	id, data, err := api.validateProviderConfig(req)
 	if err != nil {
@@ -127,6 +131,9 @@ func (api *API) UpdateHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// update function of configStore interface is called to perform an update
+	// of the vaidated inputs passed in the request, when the update api is
+	// called.
 	err = api.configStore.Update(req.Context(), id, data)
 	if err != nil {
 		if errors.Is(err, ErrNotFound) {
