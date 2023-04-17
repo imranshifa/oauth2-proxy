@@ -63,6 +63,9 @@ func NewAPI(conf options.API, rs *RedisStore, proxyPrefix string) error {
 // inputs in the configStore which is an interface defined for storing providers information
 // for adding multi-tenancy in oauth2-proxy
 func (api *API) CreateHandler(rw http.ResponseWriter, req *http.Request) {
+
+	// validate before creating new config entry and write error
+	// response in case of error
 	id, providerConf, err := api.validateProviderConfig(req)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusBadRequest, err.Error())
@@ -82,6 +85,7 @@ func (api *API) CreateHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// returning status created in case of successful execution
 	rw.WriteHeader(http.StatusCreated)
 }
 
@@ -126,6 +130,8 @@ func (api *API) DeleteHandler(rw http.ResponseWriter, req *http.Request) {
 // It is an http handler function defined for update api calls and it ensures
 // to return proper response in case of failure as well
 func (api *API) UpdateHandler(rw http.ResponseWriter, req *http.Request) {
+
+	// inputs are validated
 	id, data, err := api.validateProviderConfig(req)
 	if err != nil {
 		writeErrorResponse(rw, http.StatusBadRequest, err.Error())
