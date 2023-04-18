@@ -89,6 +89,8 @@ func (api *API) CreateHandler(rw http.ResponseWriter, req *http.Request) {
 	rw.WriteHeader(http.StatusCreated)
 }
 
+// This function handles the get api for getting the provider configuration
+// from store based on the ID present in the url
 func (api *API) GetHandler(rw http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
@@ -108,6 +110,8 @@ func (api *API) GetHandler(rw http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(rw, providerConf)
 }
 
+// This function handles the delete api to delete a provider config entry
+// from store using its ID given in the url
 func (api *API) DeleteHandler(rw http.ResponseWriter, req *http.Request) {
 	vars := mux.Vars(req)
 	id := vars["id"]
